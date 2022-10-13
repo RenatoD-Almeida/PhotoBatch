@@ -9,7 +9,7 @@
             // Flags
             
             void RegisterFlag(const std::string& Flag);
-            bool GetFlag(const std::string& Flag) const;
+            bool GetFlag(const std::string& Flag) const; // mover ao private depois!
             void Parser(int argc, char* argv[]);
             
             // Options

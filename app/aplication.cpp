@@ -16,6 +16,19 @@ namespace Args
     }
 }
 
+void ValidateArgs(const ArgumentParser& argParser) 
+{
+    const bool bRename = argParser.GetFlag(Args::Flags::Rename);
+    const bool bConvert = argParser.GetFlag(Args::Flags::Convert);
+    const bool bResize = argParser.GetFlag(Args::Flags::Resize);
+    const bool bScale = argParser.GetFlag(Args::Flags::Scale);
+
+    if(!(bRename ^ bConvert ^ bResize ^ bScale))
+    {
+        throw std::invalid_argument("Ha mais de uma flag/opcao ativa!!\n");
+    }
+}
+
 int main(int argc, char* argv[]){
 
     ArgumentParser ArgParser;
@@ -25,12 +38,21 @@ int main(int argc, char* argv[]){
 
     ArgParser.Parser(argc, argv);
 
-    std::cout << std::boolalpha << "rename  : " << std::setw(10) << ArgParser.GetFlag(Args::Flags::Rename) << std::endl;
-    std::cout << std::boolalpha << "convert : " << std::setw(10) << ArgParser.GetFlag(Args::Flags::Convert) << std::endl;
-    std::cout << std::boolalpha << "resize  : " << std::setw(10) << ArgParser.GetFlag(Args::Flags::Resize) << std::endl;
-    std::cout << std::boolalpha << "scale   : " << std::setw(10) << ArgParser.GetFlag(Args::Flags::Scale) << std::endl;
-    std::cout << "folder  : "  << std::setw(10) << ArgParser.GetOptionAs<const std::string&>("folder") << std::endl;
-    std::cout << "amount  : "  << std::setw(10) << ArgParser.GetOptionAs<float>("amount") << std::endl;
+    try
+    {
+        ValidateArgs(ArgParser);
+    }catch(const std::exception& exception)
+    {
+        std::cerr << exception.what() << std::endl;
+    }
+
+
+    // std::cout << std::boolalpha << "rename  : " << std::setw(10) << ArgParser.GetFlag(Args::Flags::Rename) << std::endl;
+    // std::cout << std::boolalpha << "convert : " << std::setw(10) << ArgParser.GetFlag(Args::Flags::Convert) << std::endl;
+    // std::cout << std::boolalpha << "resize  : " << std::setw(10) << ArgParser.GetFlag(Args::Flags::Resize) << std::endl;
+    // std::cout << std::boolalpha << "scale   : " << std::setw(10) << ArgParser.GetFlag(Args::Flags::Scale) << std::endl;
+    // std::cout << "folder  : "  << std::setw(10) << ArgParser.GetOptionAs<const std::string&>("folder") << std::endl;
+    // std::cout << "amount  : "  << std::setw(10) << ArgParser.GetOptionAs<float>("amount") << std::endl;
     
 
     return 0;
