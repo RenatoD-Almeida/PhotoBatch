@@ -3,6 +3,8 @@
 void RegisterApiFlags(class ArgumentParser& ap);
 void RegisterApiOptions(class ArgumentParser& ap);
 
+
+//descobrir como usar namespaces e por que do constexpr
 namespace Args
 {
     namespace Flags
