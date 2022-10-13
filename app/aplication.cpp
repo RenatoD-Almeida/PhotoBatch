@@ -14,6 +14,11 @@ namespace Args
         static constexpr const char* Resize = "resize";
         static constexpr const char* Scale = "scale"; 
     }
+    namespace Options
+    {
+        static constexpr const char* Folder = "folder";
+        static constexpr const char* Filter= "filter";   
+    }
 }
 
 void ValidateArgs(const ArgumentParser& argParser) 
@@ -46,14 +51,14 @@ int main(int argc, char* argv[]){
         std::cerr << exception.what() << std::endl;
     }
 
-
-    // std::cout << std::boolalpha << "rename  : " << std::setw(10) << ArgParser.GetFlag(Args::Flags::Rename) << std::endl;
-    // std::cout << std::boolalpha << "convert : " << std::setw(10) << ArgParser.GetFlag(Args::Flags::Convert) << std::endl;
-    // std::cout << std::boolalpha << "resize  : " << std::setw(10) << ArgParser.GetFlag(Args::Flags::Resize) << std::endl;
-    // std::cout << std::boolalpha << "scale   : " << std::setw(10) << ArgParser.GetFlag(Args::Flags::Scale) << std::endl;
-    // std::cout << "folder  : "  << std::setw(10) << ArgParser.GetOptionAs<const std::string&>("folder") << std::endl;
-    // std::cout << "amount  : "  << std::setw(10) << ArgParser.GetOptionAs<float>("amount") << std::endl;
-    
+    #ifdef dev
+    std::cout << std::boolalpha << "rename  : " << std::setw(10) << ArgParser.GetFlag(Args::Flags::Rename) << std::endl;
+    std::cout << std::boolalpha << "convert : " << std::setw(10) << ArgParser.GetFlag(Args::Flags::Convert) << std::endl;
+    std::cout << std::boolalpha << "resize  : " << std::setw(10) << ArgParser.GetFlag(Args::Flags::Resize) << std::endl;
+    std::cout << std::boolalpha << "scale   : " << std::setw(10) << ArgParser.GetFlag(Args::Flags::Scale) << std::endl;
+    std::cout << "folder  : "  << std::setw(10) << ArgParser.GetOptionAs<const std::string&>(Args::Options::Folder) << std::endl;
+    std::cout << "filter  : "  << std::setw(10) << ArgParser.GetOptionAs<const std::string&>(Args::Options::Filter) << std::endl;
+    #endif
 
     return 0;
 }
@@ -67,6 +72,6 @@ void RegisterApiFlags(class ArgumentParser& ap){
 }
 
 void RegisterApiOptions(class ArgumentParser& ap){
-    ap.RegisterOption("folder");
-    ap.RegisterOption("amount");
+    ap.RegisterOption(Args::Options::Folder);
+    ap.RegisterOption(Args::Options::Filter);
 }
