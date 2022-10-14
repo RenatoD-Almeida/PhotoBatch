@@ -49,6 +49,7 @@ void ArgumentParser::Parser(int argc, char* argv[])
                         }
                     }else{
                         //Flag
+                        arg = utility::ToLowerString(arg);
                         auto FlagIt = m_Flags.find(arg);
                         if(FlagIt != std::end(m_Flags))
                         {

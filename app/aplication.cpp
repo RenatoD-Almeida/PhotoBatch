@@ -71,7 +71,6 @@ int main(int argc, char* argv[]){
         std::cout << "folder  : "  << std::setw(10) << ArgParser.GetOptionAs<const std::string&>(Args::Options::Folder) << std::endl;
         std::cout << "filter  : "  << std::setw(10) << ArgParser.GetOptionAs<const std::string&>(Args::Options::Filter) << std::endl;
         std::string folder = ArgParser.GetOptionAs<const std::string&>(Args::Options::Folder);
-        std::cout << folder << std::endl;
     #endif
 
 
