@@ -8,3 +8,6 @@ target_link_libraries(${PROJECT_NAME}pDev PUBLIC ArgumentParser)
 target_include_directories(${PROJECT_NAME}pDev PUBLIC ../includes)
 
 target_compile_definitions(${PROJECT_NAME}pDev PUBLIC dev)
+
+set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDART 20)
+set_target_properties(${PROJECT_NAME}pDev PROPERTIES CXX_STANDART 20)
