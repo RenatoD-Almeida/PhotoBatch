@@ -26,7 +26,7 @@ void ArgumentParser::Parser(int argc, char* argv[])
     if(argc > 1){
         for(int i = 1 ; i < argc ; ++i)
         {
-            std::string arg = utility::ToLowerString(argv[i]);
+            std::string arg = argv[i];
             if(arg.length() >= 3)
             {
                 if(arg[0] == '-' && arg[1] == '-')
@@ -38,7 +38,7 @@ void ArgumentParser::Parser(int argc, char* argv[])
                         const size_t SignPos = arg.find('=');
                         if(SignPos != std::string::npos)
                         {
-                            std::string OptionKey = arg.substr(0, SignPos);
+                            std::string OptionKey = utility::ToLowerString(arg.substr(0, SignPos));
                             std::string OptionValue = arg.substr(SignPos + 1);
                             
                             auto OptionIt = m_Options.find(OptionKey);

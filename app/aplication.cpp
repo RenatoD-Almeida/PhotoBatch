@@ -1,4 +1,5 @@
 #include "argumentParser.hpp"
+#include <filesystem>
 
 void RegisterApiFlags(class ArgumentParser& ap);
 void RegisterApiOptions(class ArgumentParser& ap);
@@ -17,7 +18,7 @@ namespace Args
     namespace Options
     {
         static constexpr const char* Folder = "folder";
-        static constexpr const char* Filter= "filter";   
+        static constexpr const char* Filter = "filter";   
     }
 }
 
@@ -31,6 +32,17 @@ void ValidateArgs(const ArgumentParser& argParser)
     if(!(bRename ^ bConvert ^ bResize ^ bScale))
     {
         throw std::invalid_argument("Ha mais de uma flag/opcao ativa!!\n");
+    }
+
+    const std::string folder = argParser.GetOptionAs<const std::string&>(Args::Options::Folder);
+    if(folder.empty())
+    {
+        throw std::invalid_argument("O diretorio da pasta nao pode estar vazia!\n");
+    }
+    
+    if(!std::filesystem::exists(folder))
+    {
+        throw std::invalid_argument("A pasta informada nao existe!\n");
     }
 }
 
@@ -52,26 +64,31 @@ int main(int argc, char* argv[]){
     }
 
     #ifdef dev
-    std::cout << std::boolalpha << "rename  : " << std::setw(10) << ArgParser.GetFlag(Args::Flags::Rename) << std::endl;
-    std::cout << std::boolalpha << "convert : " << std::setw(10) << ArgParser.GetFlag(Args::Flags::Convert) << std::endl;
-    std::cout << std::boolalpha << "resize  : " << std::setw(10) << ArgParser.GetFlag(Args::Flags::Resize) << std::endl;
-    std::cout << std::boolalpha << "scale   : " << std::setw(10) << ArgParser.GetFlag(Args::Flags::Scale) << std::endl;
-    std::cout << "folder  : "  << std::setw(10) << ArgParser.GetOptionAs<const std::string&>(Args::Options::Folder) << std::endl;
-    std::cout << "filter  : "  << std::setw(10) << ArgParser.GetOptionAs<const std::string&>(Args::Options::Filter) << std::endl;
+        std::cout << std::boolalpha << "rename  : " << std::setw(10) << ArgParser.GetFlag(Args::Flags::Rename) << std::endl;
+        std::cout << std::boolalpha << "convert : " << std::setw(10) << ArgParser.GetFlag(Args::Flags::Convert) << std::endl;
+        std::cout << std::boolalpha << "resize  : " << std::setw(10) << ArgParser.GetFlag(Args::Flags::Resize) << std::endl;
+        std::cout << std::boolalpha << "scale   : " << std::setw(10) << ArgParser.GetFlag(Args::Flags::Scale) << std::endl;
+        std::cout << "folder  : "  << std::setw(10) << ArgParser.GetOptionAs<const std::string&>(Args::Options::Folder) << std::endl;
+        std::cout << "filter  : "  << std::setw(10) << ArgParser.GetOptionAs<const std::string&>(Args::Options::Filter) << std::endl;
+        std::string folder = ArgParser.GetOptionAs<const std::string&>(Args::Options::Folder);
+        std::cout << folder << std::endl;
     #endif
+
 
     return 0;
 }
 
 
-void RegisterApiFlags(class ArgumentParser& ap){
+void RegisterApiFlags(class ArgumentParser& ap)
+{
     ap.RegisterFlag("rename");
     ap.RegisterFlag("convert");
     ap.RegisterFlag("resize");
     ap.RegisterFlag("scale");
 }
 
-void RegisterApiOptions(class ArgumentParser& ap){
+void RegisterApiOptions(class ArgumentParser& ap)
+{
     ap.RegisterOption(Args::Options::Folder);
     ap.RegisterOption(Args::Options::Filter);
 }
