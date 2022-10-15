@@ -8,6 +8,7 @@
 namespace utility{
 
 std::string ToLowerString(std::string str);
+bool validateString(const std::string& string);
 
 }
 #endif

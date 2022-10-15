@@ -9,4 +9,19 @@ namespace utility{
         return str;
     }
 
+    bool validateString(const std::string& string)
+    {
+        const std::string invalidCaracteres = "\\/*?:\"<>|";
+        for(char c : string)
+        {
+            for(char _c : invalidCaracteres)
+            {
+                if(c == _c)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }

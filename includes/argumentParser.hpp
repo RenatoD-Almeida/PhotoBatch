@@ -19,12 +19,14 @@
             T GetOptionAs(const std::string& option) const;
 
         private:
+            // Mapeamento das flags e opções
+            std::map<std::string, bool> m_Flags;
+            std::map<std::string, std::string> m_Options;
 
             //Option
             const std::string& GetOption(const std::string& option) const;
 
-            std::map<std::string, bool> m_Flags;
-            std::map<std::string, std::string> m_Options;
+
     };
 
 #endif

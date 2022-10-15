@@ -1,11 +1,14 @@
 #include "argumentParser.hpp"
 #include <filesystem>
 
+// ============================ Registram flags e Opções necessárias!
 void RegisterApiFlags(class ArgumentParser& ap);
 void RegisterApiOptions(class ArgumentParser& ap);
 
+// ============================ Valida os argumentos passados via linha de comando!
+void ValidateArgs(const ArgumentParser& argParser);
 
-//descobrir como usar namespaces e por que do constexpr
+
 namespace Args
 {
     namespace Flags
@@ -19,30 +22,6 @@ namespace Args
     {
         static constexpr const char* Folder = "folder";
         static constexpr const char* Filter = "filter";   
-    }
-}
-
-void ValidateArgs(const ArgumentParser& argParser) 
-{
-    const bool bRename = argParser.GetFlag(Args::Flags::Rename);
-    const bool bConvert = argParser.GetFlag(Args::Flags::Convert);
-    const bool bResize = argParser.GetFlag(Args::Flags::Resize);
-    const bool bScale = argParser.GetFlag(Args::Flags::Scale);
-
-    if(!(bRename ^ bConvert ^ bResize ^ bScale))
-    {
-        throw std::invalid_argument("Ha mais de uma flag/opcao ativa!!\n");
-    }
-
-    const std::string folder = argParser.GetOptionAs<const std::string&>(Args::Options::Folder);
-    if(folder.empty())
-    {
-        throw std::invalid_argument("O diretorio da pasta nao pode estar vazia!\n");
-    }
-    
-    if(!std::filesystem::exists(folder))
-    {
-        throw std::invalid_argument("A pasta informada nao existe!\n");
     }
 }
 
@@ -80,14 +59,49 @@ int main(int argc, char* argv[]){
 
 void RegisterApiFlags(class ArgumentParser& ap)
 {
-    ap.RegisterFlag("rename");
-    ap.RegisterFlag("convert");
-    ap.RegisterFlag("resize");
-    ap.RegisterFlag("scale");
+    ap.RegisterFlag(Args::Flags::Rename);
+    ap.RegisterFlag(Args::Flags::Convert);
+    ap.RegisterFlag(Args::Flags::Resize);
+    ap.RegisterFlag(Args::Flags::Scale);
 }
 
 void RegisterApiOptions(class ArgumentParser& ap)
 {
     ap.RegisterOption(Args::Options::Folder);
     ap.RegisterOption(Args::Options::Filter);
+}
+
+void ValidateArgs(const ArgumentParser& argParser) 
+{
+    const bool bRename = argParser.GetFlag(Args::Flags::Rename);
+    const bool bConvert = argParser.GetFlag(Args::Flags::Convert);
+    const bool bResize = argParser.GetFlag(Args::Flags::Resize);
+    const bool bScale = argParser.GetFlag(Args::Flags::Scale);                      // Option: Folder e Filter necessárias 
+                                                                                    // para todas as flags
+    /* ============================ Validação das flags ============================*/
+
+    if(!(bRename ^ bConvert ^ bResize ^ bScale))
+    {
+        throw std::invalid_argument("Ha mais de uma flag/opcao ativa!!\n");
+    }
+
+    /* ============================ Validação do folder ============================ */
+
+    const std::string folder = argParser.GetOptionAs<const std::string&>(Args::Options::Folder);
+    if(folder.empty())
+    {
+        throw std::invalid_argument("O diretorio da pasta nao pode estar vazia!\n");
+    }
+    
+    if(!std::filesystem::exists(folder))
+    {
+        throw std::invalid_argument("A pasta informada nao existe!\n");
+    }
+    /* ============================ Validação do filter ============================ */
+    const std::string filter = argParser.GetOptionAs<const std::string&>(Args::Options::Filter);
+    if(!utility::validateString(filter))
+    {
+        throw std::invalid_argument("Ha argumentos invalidos no filtro!\n");
+    }
+
 }
