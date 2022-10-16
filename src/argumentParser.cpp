@@ -1,5 +1,7 @@
 #include "argumentParser.hpp"
 
+
+/* ============================ Flags Methods ============================ */
 void ArgumentParser::RegisterFlag(const std::string& Flag)
 {
     if(!(Flag.empty()))
@@ -21,6 +23,30 @@ bool ArgumentParser::GetFlag(const std::string& Flag) const
     return false;
 }
 
+/* ============================ Options Methods ============================ */
+void ArgumentParser::RegisterOption(const std::string& option)
+{
+    if(!option.empty())
+    {
+        m_Options[option] = "";
+    }
+}
+
+const std::string& ArgumentParser::GetOption(const std::string& option) const
+{
+    if(!option.empty())
+    {
+        auto it = m_Options.find(option);
+        if(it != std::end(m_Options))
+        {
+            return it->second;           
+        }
+    }
+    static std::string EmptyOption = "";
+    return EmptyOption;
+}
+
+/* ============================ Arg Methods ============================ */
 void ArgumentParser::Parser(int argc, char* argv[])
 {
     if(argc > 1){
@@ -60,26 +86,4 @@ void ArgumentParser::Parser(int argc, char* argv[])
             }
         }
     }
-}
-
-void ArgumentParser::RegisterOption(const std::string& option)
-{
-    if(!option.empty())
-    {
-        m_Options[option] = "";
-    }
-}
-
-const std::string& ArgumentParser::GetOption(const std::string& option) const
-{
-    if(!option.empty())
-    {
-        auto it = m_Options.find(option);
-        if(it != std::end(m_Options))
-        {
-            return it->second;           
-        }
-    }
-    static std::string EmptyOption = "";
-    return EmptyOption;
 }

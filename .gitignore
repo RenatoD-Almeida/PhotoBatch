@@ -53,5 +53,6 @@ _deps
 # External projects
 *-prefix/
 
+.vscode/
 builddir
 remember.txt
