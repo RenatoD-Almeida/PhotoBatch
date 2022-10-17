@@ -54,7 +54,7 @@ int ArgumentParser::GetOptionAs(const std::string& option) const
 };
 
 template<>
-const std::string& ArgumentParser::GetOptionAs<const std::string&>(const std::string& option) const
+std::string ArgumentParser::GetOptionAs<std::string>(const std::string& option) const
 {
     return GetOption(option);
 };
