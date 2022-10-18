@@ -100,10 +100,12 @@ namespace utility
                 std::cout << "\n\t--[scale]   : Redimensiona imagem por escala\n";
                 std::cout << "\nPara utilizar cada uma, sera necessario configurar os parametros necessarios.\n";
                 std::cout << "Ha dois tipos de parametros: Gerais e Individuais.\n";
+
                 std::cout << "\n----- Opt Geral -----\n\n";
                 std::cout << "* Opts gerais sao utilizadas por todas as flags *\n\n";
                 std::cout << "\t--[Folder] : seta a pasta que o Photobatch ira trabalhar. (aceita caminho relativo e absoluto)\n";
                 std::cout << "\t--[Filter] : seta os arquivos que o Photobatch ira trabalhar\n\n";
+
                 std::cout << "----- Opt Individual -----\n\n";
                 std::cout << "FLAG: --rename\n\n";
                 std::cout << "\t--[prefix]       : Configura um prefixo para o novo nome das imagens.\n";
@@ -116,9 +118,33 @@ namespace utility
                 std::cout << "\t--[Height]       : Configura a nova altura da imagem a ser redimensionada.\n\n";
                 std::cout << "FLAG: --scale\n\n";
                 std::cout << "\t--[amout]        : Configura a quantidade do escalonamento da imagem.\n";
+
                 std::cout << "\n ----- Exemplos -----\n\n";
                 std::cout << "FLAG: --rename\n\n";
-                std::cout << "chamada:\n\n./app/Photobatch --rename --folder:\"/home/<username>/<workfolder>\" --filter=\".jpg\" --prefix=\"imagem\" --StartNumber=0\n";
+                std::cout << "\t - chamada:\n\n\t\t./Photobatch --rename --folder:\"/home/<username>/<workfolder>\" --filter=\".jpg\" --prefix=\"image_\" --StartNumber=0\n\n";
+                std::cout << "\t - Digamos que tenha arquivos .jpg em um folder, o Photobatch ira renomear os arquivos usando o <prefix + StartNumber>" << std::endl;
+                std::cout << "\n\n\t\t <image_0>, <image_1>, <image_2> ...\n\n";
+                std::cout << "FLAG: --convert\n\n";
+                std::cout << "\t - chamada:\n\n\t\t./Photobatch --convert --folder:\"/home/<username>/<workfolder>\" --filter=\".jpg\" --from=\"jpg\" --to=\"png\"\n\n";
+                std::cout << "\t - Digamos que tenha arquivos .jpg em um folder, o Photobatch ira converter os arquivos usando o <from|to>" << std::endl;
+                std::cout << "\n\tFrom:";
+                std::cout << "\n\n\t\t <image_1.jpg>, <image_2.jpg>, <image_3.jpg> ...\n";
+                std::cout << "\n\tTo:";
+                std::cout << "\n\n\t\t <image_1.png>, <image_2.png>, <image_3.png> ...\n\n";
+                std::cout << "FLAG: --Resize\n\n";
+                std::cout << "\t - chamada:\n\n\t\t./Photobatch --resize --folder:\"/home/<username>/<workfolder>\" --filter=\".jpg\" --width=1280 --height=720\n\n";
+                std::cout << "\t - Digamos que tenha arquivos .jpg em um folder,Com dimensoes 680x440, o Photobatch ira redimensionar os arquivos usando o <width|height>" << std::endl;
+                std::cout << "\n\tAntes:";
+                std::cout << "\n\t\t <image_1.jpg> : 680x440...\n";
+                std::cout << "\n\tDepois:";
+                std::cout << "\n\t\t <image_1.jpg> : 1280x720...\n\n";
+                std::cout << "FLAG: --scale\n\n";
+                std::cout << "\t - chamada:\n\n\t\t./Photobatch --scale --folder:\"/home/<username>/<workfolder>\" --filter=\".jpg\" --amout=0.5\n\n";
+                std::cout << "\t - Digamos que tenha arquivos .jpg em um folder, com dimensoes 680x440, o Photobatch ira redimensionar os arquivos usando o <amount> atraves de escala" << std::endl;
+                std::cout << "\n\tAntes:";
+                std::cout << "\n\t\t <image_1.jpg> : 1280x720...\n";
+                std::cout << "\n\tDepois:";
+                std::cout << "\n\t\t <image_1.jpg> : 640x360...\n\n";
                 break;
         }
         std::cout << "\nEnter para continuar: "; getchar();
