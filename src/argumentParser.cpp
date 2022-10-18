@@ -1,6 +1,5 @@
 #include "argumentParser.hpp"
 
-
 /* ============================ Flags Methods ============================ */
 void ArgumentParser::RegisterFlag(const std::string& Flag)
 {
@@ -83,6 +82,9 @@ void ArgumentParser::Parser(int argc, char* argv[])
                         } 
                     }
                 }
+            }else
+            {
+                throw std::invalid_argument("Opcao invalida: " + arg);
             }
         }
     }

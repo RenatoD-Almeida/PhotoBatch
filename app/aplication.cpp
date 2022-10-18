@@ -14,29 +14,6 @@ void ValidateArgs(const ArgumentParser& argParser);
     void print_flags(ArgumentParser& ArgParser);
 #endif
 
-namespace Args
-{
-    namespace Flags
-    {
-        static constexpr const char* Rename = "rename";
-        static constexpr const char* Convert = "convert";
-        static constexpr const char* Resize = "resize";
-        static constexpr const char* Scale = "scale";
-        static constexpr const char* Help = "help"; 
-    }
-    namespace Options
-    {
-        static constexpr const char* Folder = "folder";
-        static constexpr const char* Filter = "filter";   
-        static constexpr const char* Width = "width";
-        static constexpr const char* Height = "height";
-        static constexpr const char* Amount = "amount";
-        static constexpr const char* Prefix = "prefix";
-        static constexpr const char* StartNumber = "startnumber";
-        static constexpr const char* To = "to";
-        static constexpr const char* From = "from";
-    }
-}
 
 int main(int argc, char* argv[]){
 
@@ -45,10 +22,11 @@ int main(int argc, char* argv[]){
     RegisterApiFlags(ArgParser);
     RegisterApiOptions(ArgParser);
 
-    ArgParser.Parser(argc, argv);
+    
 
     try
     {
+        ArgParser.Parser(argc, argv);
         ValidateArgs(ArgParser);
     }catch(const std::exception& exception)
     {
@@ -64,6 +42,7 @@ int main(int argc, char* argv[]){
 }
 
 /* ============================ Validação Argumentos ============================ */
+
 void ValidateArgs(const ArgumentParser& argParser) 
 {
     const bool bRename = argParser.GetFlag(Args::Flags::Rename);
@@ -79,21 +58,22 @@ void ValidateArgs(const ArgumentParser& argParser)
         {
             if(bRename)
             {
-                utility::helpGetMessage("rename", true);
+                utility::helpGetMessage(Args::Flags::i_RENAME);
             }else if(bConvert)
             {
-                utility::helpGetMessage("convert", true);
+                utility::helpGetMessage(Args::Flags::i_CONVERT);
             }else if(bResize)
             {
-                utility::helpGetMessage("resize", true);
+                utility::helpGetMessage(Args::Flags::i_RESIZE);
             }else
             {
-                utility::helpGetMessage("scale", true);
+                utility::helpGetMessage(Args::Flags::i_SCALE);
             }
             return;
         }else /* ---------------------------- Help com nenhum flag ativa */
         {
-            utility::helpGetMessage("", false);
+            utility::helpGetMessage(Args::Flags::i_NOARGS);
+            return;
         }
     }
 
@@ -232,12 +212,15 @@ void print_flags(ArgumentParser& ArgParser)
     std::cout << std::endl;
     std::cout << std::boolalpha << "HELP    : " << std::setw(10) << ArgParser.GetFlag(Args::Flags::Help) << std::endl;
     std::cout << std::endl;
+    std::cout << "---- Flags" << std::endl;
     std::cout << std::boolalpha << "rename  : " << std::setw(10) << ArgParser.GetFlag(Args::Flags::Rename) << std::endl;
     std::cout << std::boolalpha << "convert : " << std::setw(10) << ArgParser.GetFlag(Args::Flags::Convert) << std::endl;
     std::cout << std::boolalpha << "resize  : " << std::setw(10) << ArgParser.GetFlag(Args::Flags::Resize) << std::endl;
     std::cout << std::boolalpha << "scale   : " << std::setw(10) << ArgParser.GetFlag(Args::Flags::Scale) << std::endl;
+    std::cout << std::endl << "---- Option Gerais" << std::endl;
     std::cout << "folder  : "  << std::setw(10) << ArgParser.GetOptionAs<std::string>(Args::Options::Folder) << std::endl;
     std::cout << "filter  : "  << std::setw(10) << ArgParser.GetOptionAs<std::string>(Args::Options::Filter) << std::endl;
+    std::cout << std::endl << "---- Option Flags" << std::endl;
     std::cout << "width   : "  << std::setw(10) << ArgParser.GetOptionAs<int>(Args::Options::Width) << std::endl;
     std::cout << "Height  : "  << std::setw(10) << ArgParser.GetOptionAs<int>(Args::Options::Height) << std::endl;
     std::cout << "Amount  : "  << std::setw(10) << ArgParser.GetOptionAs<float>(Args::Options::Amount) << std::endl;
@@ -256,6 +239,7 @@ void RegisterApiFlags(class ArgumentParser& ap)
     ap.RegisterFlag(Args::Flags::Convert);
     ap.RegisterFlag(Args::Flags::Resize);
     ap.RegisterFlag(Args::Flags::Scale);
+    
     ap.RegisterFlag(Args::Flags::Help);
 
 }
