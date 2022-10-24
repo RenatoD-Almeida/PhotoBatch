@@ -22,8 +22,6 @@ int main(int argc, char* argv[]){
     RegisterApiFlags(ArgParser);
     RegisterApiOptions(ArgParser);
 
-    
-
     try
     {
         ArgParser.Parser(argc, argv);
