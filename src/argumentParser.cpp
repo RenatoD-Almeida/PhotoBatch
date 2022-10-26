@@ -1,5 +1,30 @@
 #include "argumentParser.hpp"
 
+float ArgumentParser::GetOptionAs(const std::string& option, float) const
+{
+    const std::string& OptionValue = GetOption(option);
+    if(!OptionValue.empty()){
+        return std::stof(OptionValue);
+    }
+
+    return -1; 
+};
+
+int ArgumentParser::GetOptionAs(const std::string& option, int) const
+{
+    const std::string& OptionValue = GetOption(option);
+    if(!OptionValue.empty()){
+        return std::stoi(OptionValue);
+    }
+
+    return -1; 
+};
+
+std::string ArgumentParser::GetOptionAs(const std::string& option, std::string) const
+{
+    return GetOption(option);
+};
+
 /* ============================ Flags Methods ============================ */
 void ArgumentParser::RegisterFlag(const std::string& Flag)
 {
@@ -72,7 +97,8 @@ void ArgumentParser::Parser(int argc, char* argv[])
                                 OptionIt->second = OptionValue;
                             }
                         }
-                    }else{
+                    }else
+                    {
                         //Flag
                         arg = utility::ToLowerString(arg);
                         auto FlagIt = m_Flags.find(arg);
@@ -89,3 +115,4 @@ void ArgumentParser::Parser(int argc, char* argv[])
         }
     }
 }
+

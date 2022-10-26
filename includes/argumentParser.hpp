@@ -2,7 +2,10 @@
 #define _ARGUMENT_PARSER_H
 
 #include "utility.hpp"
-
+    
+    template<typename T>
+    struct Tag { using Type = T; };
+    
     class ArgumentParser
     {
         public:
@@ -16,8 +19,8 @@
             void RegisterOption(const std::string& option);
 
             template<typename T>
-            T GetOptionAs(const std::string& option) const;
-
+            T GetOptionAs(const std::string& option) const{ return GetOptionAs(option, T());}
+        
         private:
             // Mapeamento das flags e opções
             std::map<std::string, bool> m_Flags;
@@ -25,36 +28,11 @@
 
             //Option
             const std::string& GetOption(const std::string& option) const;
-
-
+            
+            float GetOptionAs(const std::string& option, float) const;
+            int GetOptionAs(const std::string& option, int) const;
+            std::string GetOptionAs(const std::string& option, std::string) const;
     };
 
+
 #endif
-
-template<>
-float ArgumentParser::GetOptionAs(const std::string& option) const
-{
-    const std::string& OptionValue = GetOption(option);
-    if(!OptionValue.empty()){
-        return std::stof(OptionValue);
-    }
-
-    return -1; 
-};
-
-template<>
-int ArgumentParser::GetOptionAs(const std::string& option) const
-{
-    const std::string& OptionValue = GetOption(option);
-    if(!OptionValue.empty()){
-        return std::stoi(OptionValue);
-    }
-
-    return -1; 
-};
-
-template<>
-std::string ArgumentParser::GetOptionAs<std::string>(const std::string& option) const
-{
-    return GetOption(option);
-};
