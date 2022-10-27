@@ -35,7 +35,7 @@ const std::string& RenameMode::getModeName() const
 
 void RenameMode::runImpl()
 {
-    std::cout << "\n";
+    std::cout << "\n\n";
     std::cout << getModeName() << "Pasta         " << std::setw(20) << " : " << std::setw(15) << " " << this->getFolder() << std::endl;
     std::cout << getModeName() << "Filtro        " << std::setw(20) << " : " << std::setw(15) << " " << this->getFilter() << std::endl;
     std::cout << getModeName() << "Prefix        " << std::setw(20) << " : " << std::setw(15) << " " << this->m_Prefix << std::endl;
@@ -203,8 +203,9 @@ std::unique_ptr<Mode> createMode(const ArgumentParser& argParser)
         }
 
         int startNumber = 0;
+        
         try
-        {
+        {   
             startNumber = argParser.GetOptionAs<int>(Args::Options::StartNumber);
         }
         catch(const std::invalid_argument&)

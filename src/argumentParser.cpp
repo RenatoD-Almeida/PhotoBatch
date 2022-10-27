@@ -107,10 +107,10 @@ void ArgumentParser::Parser(int argc, char* argv[])
                             FlagIt->second = true;
                         } 
                     }
+                }else
+                {
+                    throw std::invalid_argument("Opcao invalida: " + arg);
                 }
-            }else
-            {
-                throw std::invalid_argument("Opcao invalida: " + arg);
             }
         }
     }

@@ -35,8 +35,8 @@
             void runImpl() override;
 
         private:
-            std::string m_Prefix;
-            int m_StartNumber;
+            std::string     m_Prefix;
+            int             m_StartNumber;
     };
 
     std::unique_ptr<Mode> createMode(const ArgumentParser& argParser);
