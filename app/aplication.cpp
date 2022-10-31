@@ -1,6 +1,5 @@
 #include "mode.hpp"
-#include <array>
-
+#include <stb_image.h>
 
 // ============================ Registram flags e Opções necessárias!
 void RegisterApiFlags(class ArgumentParser& ap);
@@ -18,10 +17,14 @@ int main(int argc, char* argv[]){
     RegisterApiFlags(ArgParser);
     RegisterApiOptions(ArgParser);
 
+    #ifdef dev
+        std::cout << "\n\n------ Relatorio ------\n";
+    #endif
+
     try
     {
         ArgParser.Parser(argc, argv);
-        std::unique_ptr PhotoBatchMode = createMode(ArgParser);
+        std::unique_ptr PhotoBatchMode = CreateMode(ArgParser);
         PhotoBatchMode->Run();
     }catch(const std::exception& exception)
     {
@@ -39,6 +42,7 @@ int main(int argc, char* argv[]){
 #ifdef dev
 void print_flags(ArgumentParser& ArgParser)
 {
+    std::cout << "\n\n------ Relatorio FLAGS n OPTIONS ------\n";
     std::cout << std::endl;
     std::cout << std::boolalpha << "HELP    : " << std::setw(10) << ArgParser.GetFlag(Args::Flags::Help) << std::endl;
     std::cout << std::endl;

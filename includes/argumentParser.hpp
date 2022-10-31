@@ -3,9 +3,6 @@
 
 #include "utility.hpp"
     
-    template<typename T>
-    struct Tag { using Type = T; };
-    
     class ArgumentParser
     {
         public:
