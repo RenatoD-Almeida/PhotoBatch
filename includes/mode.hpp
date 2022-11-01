@@ -40,7 +40,7 @@
             void runImpl() override;
             
         public:
-            RenameMode(const std::string& Folder, const std::string& Filter, const std::string Prefix, const int StartNumber);  
+            RenameMode(const std::string&, const std::string&, const std::string, const int);  
             const std::string& getModeName() const override;
     };
 
@@ -48,37 +48,48 @@
 
     class ConvertMode final : public Mode
     {
+        std::string m_From;
+        std::string m_To;
 
         protected:
             void runImpl() override;
         
         public:
 
-            ConvertMode(const std::string& Folder, const std::string& Filter, const std::string& fromFormat, const std::string& toFormat);
+            ConvertMode(const std::string&, const std::string&, const std::string&, const std::string&);
             const std::string& getModeName() const override;
-        
-        private:
-            std::string m_From;
-            std::string m_To;
+
             
     };
 
 /* ============================ Class Resize ============================ */
 
-    class ResizeMode final : public Mode
+    class ResizeMode : public Mode
     {
         int m_Width;
         int m_Height;
     
     public:
-        ResizeMode(const std::string& Folder, const std::string& Filter, int Width, int Height);
+        ResizeMode(const std::string&, const std::string&, int, int);
         const std::string& getModeName() const override;
-    
+        void ResizeImage(const std::filesystem::path&, int, int) const;
 
     protected:
         void runImpl() override;
-        
+
     };
+
+/* ============================ Class Scale ============================ */
+    class ScaleMode final: public ResizeMode
+    {
+        float m_Amount;
+    public:
+        ScaleMode(const std::string&, const std::string&, float);
+        const std::string& getModeName() const override;
+    protected:
+        void runImpl() override;
+    };
+
     std::unique_ptr<Mode> CreateMode(const ArgumentParser& argParser);
 
 #endif

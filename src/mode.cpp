@@ -6,6 +6,8 @@
 #include "stb_image.h"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
+#define STB_IMAGE_RESIZE_IMPLEMENTATION
+#include "stb_image_resize.h"
 
 /* ============================ Class Mode ============================ */
 
@@ -39,7 +41,7 @@ std::vector<std::filesystem::path> Mode::getFiles(const std::filesystem::path& e
         const bool bIsFile = std::filesystem::is_regular_file(entry.path());
         const bool bMatchFilter = getFilter().empty() || (entry.path().string().find(getFilter()) != std::string::npos);
         const bool bMatchExtension = extension.empty() || (entry.path().extension() == extension);
-        if(bIsFile && bMatchFilter)
+        if(bIsFile && bMatchFilter && bMatchExtension)
         {
             filesToWork.push_back(entry.path());
         }else
@@ -56,7 +58,7 @@ std::vector<std::filesystem::path> Mode::getFiles(const std::filesystem::path& e
     return filesToWork;
 }
 
-/* ============================ Class Rename ============================ */
+/* ============================ Class RenameMode ============================ */
 
 RenameMode::RenameMode(const std::string& Folder, const std::string& Filter, const std::string Prefix, const int StartNumber):
 Mode(Folder, Filter), m_Prefix(Prefix), m_StartNumber(StartNumber){}
@@ -104,7 +106,7 @@ void RenameMode::runImpl()
     std::cout << std::endl;
 }
 
-/* ============================ Class Convert ============================ */
+/* ============================ Class ConvertMode ============================ */
 
 ConvertMode::ConvertMode(const std::string& Folder, const std::string& Filter, const std::string& FromFormat, const std::string& ToFormat):
 Mode(Folder, Filter), m_From(FromFormat), m_To(ToFormat) {}
@@ -174,6 +176,150 @@ void ConvertMode::runImpl()
         std::cout << "\nFim da conversao.\n" << std::endl;
     #endif
 } 
+
+/* ============================ Class ResizeMode ============================ */
+
+ResizeMode::ResizeMode(const std::string& Folder, const std::string& Filter, int Width = -1 , int Height = -1):
+Mode(Folder, Filter), m_Width(Width), m_Height(Height){};
+
+const std::string& ResizeMode::getModeName() const
+{
+    static const std::string ResizeModeName = "[Redimensionar] : ";
+    return ResizeModeName;
+}
+
+void ResizeMode::runImpl()
+{
+    std::cout << "\nMODO\t" << getModeName() << "\n\n";
+    std::cout << getModeName() << "Pasta         " << std::setw(20) << " : " << std::setw(15) << " " << this->getFolder() << std::endl;
+    std::cout << getModeName() << "Filtro        " << std::setw(20) << " : " << std::setw(15) << " " << this->getFilter() << std::endl;
+    std::cout << getModeName() << "Width         " << std::setw(20) << " : " << std::setw(15) << " " << this->m_Width << std::endl;
+    std::cout << getModeName() << "Height        " << std::setw(20) << " : " << std::setw(15) << " " << this->m_Height << std::endl;
+
+    std::vector<std::filesystem::path> filesToResize = getFiles();
+    #ifndef dev
+        std::cout << "\nRedimensionando arquivos: \n\n";
+    #else
+        std::cout << "\nArquivos que serao redimensionados: \n\n";
+    #endif
+
+    if(m_Width > 0 && m_Height > 0)
+    {
+        for(const std::filesystem::path& filePath : filesToResize)
+        {
+            std::cout << getModeName() << filePath << std::endl;
+
+            #ifndef dev
+                ResizeImage(filePath, this->m_Width, this->m_Height);
+            #endif
+        }
+    }
+    std::cout << std::endl;
+}
+
+void ResizeMode::ResizeImage(const std::filesystem::path& filePath, int newWidth, int newHeight) const
+{
+    // Read
+    // Resize in memory
+    // write the image
+
+    int inputWidth = 0;
+    int inputHeight = 0;
+    int inputNumComp = 0;
+    const int numComReq = 4;
+
+    unsigned char* inputData = stbi_load(filePath.string().c_str(), &inputWidth, &inputHeight, &inputNumComp, numComReq);
+    
+    if(inputData)
+    {
+        const int numOutputPixels = newWidth * newHeight * numComReq;
+        std::vector<uint8_t> outputData(numOutputPixels, 0);
+
+        const int resizeResult = stbir_resize_uint8(inputData, inputWidth, inputHeight, 0, 
+                                                outputData.data(), newWidth, newHeight, 0,
+                                                numComReq);
+        
+        if(resizeResult == 1)
+        {
+            const std::filesystem::path extension = filePath.extension();
+            int writeResult = 1;
+
+            if(extension == ".jpg" || extension == ".jpeg")
+            {
+                writeResult = stbi_write_jpg(filePath.string().c_str(), newWidth, newHeight, 
+                                            numComReq, outputData.data(), 50);
+            }
+            else if(extension == ".png")
+            {
+                writeResult = stbi_write_png(filePath.string().c_str(), newWidth, newHeight, 
+                                            numComReq, outputData.data(), 50);
+            }
+            else
+            {
+                std::cout << getModeName() << "Formato nao suportado " << filePath << std::endl;
+            }
+
+            if(writeResult == 0)
+            {
+                std::cout << getModeName() << "Erro ao escrever : " << filePath << std::endl;
+            }
+        }
+        else
+        {
+            std::cout << getModeName() << "Erro ao redimensionar " << filePath << std::endl;
+        }
+
+        stbi_image_free(inputData);
+    }
+    else
+    {
+        std::cout << getModeName() << "Erro ao carregar o arquivo : " << filePath << std::endl;
+    }
+}
+
+/* ============================ Class Scale ============================ */
+
+ScaleMode::ScaleMode(const std::string& Folder, const std::string& Filter, float Amount):
+ResizeMode(Folder, Filter), m_Amount(Amount) {};
+
+const std::string& ScaleMode::getModeName() const
+{
+    static const std::string scaleModeName = "[Escalar] : ";
+    return scaleModeName;
+}
+
+void ScaleMode::runImpl()
+{
+    std::cout << "\nMODO\t" << getModeName() << "\n\n";
+    std::cout << getModeName() << "Pasta         " << std::setw(20) << " : " << std::setw(15) << " " << this->getFolder() << std::endl;
+    std::cout << getModeName() << "Filtro        " << std::setw(20) << " : " << std::setw(15) << " " << this->getFilter() << std::endl;
+    std::cout << getModeName() << "Amount        " << std::setw(20) << " : " << std::setw(15) << " " << this->m_Amount << std::endl;
+    
+    std::vector<std::filesystem::path> filesToScale = getFiles();
+
+    #ifndef dev
+        std::cout << "\nEslacando arquivos: \n\n";
+    #else
+        std::cout << "\nArquivos que serao escalados: \n\n";
+    #endif
+
+    for(const std::filesystem::path& filePath : filesToScale)
+    {
+        std::cout<< getModeName()  << filePath << std::endl;
+        #ifndef dev
+            int Width = 0;
+            int Height = 0;
+            int numComp = 0;
+            stbi_info(filePath.string().c_str(), &Width, &Height, &numComp); // apenas cabeçalho
+
+            const int newWidth = static_cast<int> (Width * this->m_Amount);
+            const int newHeight = static_cast<int> (Height * this->m_Amount);
+
+            ResizeImage(filePath, newWidth, newHeight);
+        #endif
+    }
+    
+}
 
 /* ============================ Validação Argumentos ============================ */
 std::unique_ptr<Mode> CreateMode(const ArgumentParser& argParser)
@@ -263,6 +409,8 @@ std::unique_ptr<Mode> CreateMode(const ArgumentParser& argParser)
         {
             throw std::invalid_argument("O Filtro nao pode estar vazio no modo resize!\n");
         }
+
+        return std::make_unique<ResizeMode>(folder, filter, Width, Height);
     }
 
     /* ---------------------------- Validação da flag Scale ---------------------------- */
@@ -285,6 +433,7 @@ std::unique_ptr<Mode> CreateMode(const ArgumentParser& argParser)
         {
             throw std::invalid_argument("O Filter nao pode estar vazio na flag Scale");
         }
+        return std::make_unique<ScaleMode>(folder, filter, amount);
     }
     /* ---------------------------- Validação da flag Rename ---------------------------- */
     if(bRename)
@@ -321,6 +470,7 @@ std::unique_ptr<Mode> CreateMode(const ArgumentParser& argParser)
         const std::string from = argParser.GetOptionAs<std::string>(Args::Options::From);
         const std::string to = argParser.GetOptionAs<std::string>(Args::Options::To);
         const std::array<std::string, 3> extension = {"png", "jpg", "jpeg"};
+
         if(!(to.empty()) && !(from.empty()))
         {
             const bool bValidFrom = (std::find(std::begin(extension), std::end(extension), from) != std::end(extension));
