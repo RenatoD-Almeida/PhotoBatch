@@ -2,6 +2,8 @@
 #include <iomanip>
 #include <vector>
 
+#include <chrono>
+
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
@@ -26,8 +28,16 @@ const std::string& Mode::getFolder() const
 
 void Mode::Run()
 {
-    //Medir quanto tempo a operação levou.
+    std::chrono::high_resolution_clock::time_point A = std::chrono::high_resolution_clock::now();
+
     runImpl();
+
+    std::chrono::time_point B = std::chrono::high_resolution_clock::now();
+
+    std::chrono::high_resolution_clock::duration elapsedTime = B - A;
+
+    std::cout << "Tempo de duracao : " << std::chrono::duration_cast<std::chrono::milliseconds>(elapsedTime).count()
+    << " ms\n" << std::endl;
 }
 
 std::vector<std::filesystem::path> Mode::getFiles(const std::filesystem::path& extension) const
@@ -359,11 +369,13 @@ std::unique_ptr<Mode> CreateMode(const ArgumentParser& argParser)
     /* ---------------------------- Validação das flags ativas ---------------------------- */
     if(!(bRename || bConvert || bResize || bScale))
     {
+        utility::getLogError(Args::Flags::i_NOARGS, Args::Flags::i_NoFlags);
         throw std::invalid_argument("Pelo menos uma opcao tem de estar ativa!!\n");
     }
     
     if(!(bRename ^ bConvert ^ bResize ^ bScale))
     {
+        utility::getLogError(Args::Flags::i_NOARGS, Args::Flags::i_FlagsALot);
         throw std::invalid_argument("Ha mais de uma flag/opcao ativa!!\n");
     }
 
@@ -372,11 +384,13 @@ std::unique_ptr<Mode> CreateMode(const ArgumentParser& argParser)
     const std::string folder = argParser.GetOptionAs<std::string>(Args::Options::Folder);
     if(folder.empty())
     {
+        utility::getLogError(Args::Flags::i_NOARGS, Args::Flags::i_EmptyFolder);
         throw std::invalid_argument("O diretorio da pasta nao pode estar vazia!\n");
     }
     
     if(!std::filesystem::exists(folder))
     {
+        utility::getLogError(Args::Flags::i_NOARGS, Args::Flags::i_FolderNotExists);
         throw std::invalid_argument("A pasta informada nao existe!\n");
     }
 
@@ -384,6 +398,7 @@ std::unique_ptr<Mode> CreateMode(const ArgumentParser& argParser)
     const std::string filter = argParser.GetOptionAs<std::string>(Args::Options::Filter);
     if(!utility::validateString(filter))
     {
+        utility::getLogError(Args::Flags::i_NOARGS, Args::Flags::i_InvalidFilter);
         throw std::invalid_argument("Ha argumentos invalidos no filtro: \'\\/*?:\"<>|\'\n");
     }
 
@@ -398,15 +413,18 @@ std::unique_ptr<Mode> CreateMode(const ArgumentParser& argParser)
             Height = argParser.GetOptionAs<int>(Args::Options::Height);
         }catch(const std::invalid_argument&)
         {
+            utility::getLogError(Args::Flags::i_RESIZE, Args::Flags::i_InvalidTypeWidthHeight);
             throw std::invalid_argument("Width ou Height tem de ser um numero");
         }
         
-        if(Width <= 0 || Height <= 0)
+        if(Width  <= 0 || Height <= 0)
         {
+            utility::getLogError(Args::Flags::i_RESIZE, Args::Flags::i_WidthHeightLessThanZero);
             throw std::invalid_argument("Width ou Height sao iguais ou menores que zero, Nao pode!!\n");    
         }
         if(filter.empty())
         {
+            utility::getLogError(Args::Flags::i_RESIZE, Args::Flags::i_ResizeNoFilter);
             throw std::invalid_argument("O Filtro nao pode estar vazio no modo resize!\n");
         }
 
@@ -423,14 +441,17 @@ std::unique_ptr<Mode> CreateMode(const ArgumentParser& argParser)
         }
         catch(const std::exception&)
         {
+            utility::getLogError(Args::Flags::i_SCALE, Args::Flags::i_InvalidTypeAmount);
             std::invalid_argument("A opcao amount precisa ser um numero!\n");
         }
         if(amount <= 0)
         {
+            utility::getLogError(Args::Flags::i_SCALE, Args::Flags::i_AmountLessEqualZero);
             throw std::invalid_argument("A opcao amount precisa ser maior que 0");
         }
         if(filter.empty())
         {
+            utility::getLogError(Args::Flags::i_SCALE, Args::Flags::i_ScaleNoFilter);
             throw std::invalid_argument("O Filter nao pode estar vazio na flag Scale");
         }
         return std::make_unique<ScaleMode>(folder, filter, amount);
@@ -441,10 +462,12 @@ std::unique_ptr<Mode> CreateMode(const ArgumentParser& argParser)
         std::string prefix = argParser.GetOptionAs<std::string>(Args::Options::Prefix);
         if(prefix.empty())
         {
+            utility::getLogError(Args::Flags::i_RENAME, Args::Flags::i_EmptyPrefix);
             throw std::invalid_argument("O prefixo nao pode estar vazio no modo Rename!");
         }
         if(!utility::validateString(prefix))
         {
+            utility::getLogError(Args::Flags::i_RENAME, Args::Flags::i_InvalidPrefix);
             throw std::invalid_argument("Nao pode haver caracteres especiais no prefix: \'\\/*?:\"<>|\'");
         }
 
@@ -456,10 +479,12 @@ std::unique_ptr<Mode> CreateMode(const ArgumentParser& argParser)
         }
         catch(const std::invalid_argument&)
         {
+            utility::getLogError(Args::Flags::i_RENAME, Args::Flags::i_InvalidTypeStartNumber);
             throw std::invalid_argument("O Start Number tem de ser um numero no modo Rename");
         }
         if(startNumber < 0)
         {
+            utility::getLogError(Args::Flags::i_RENAME, Args::Flags::i_StartNumberLessEqualZero);
             throw std::invalid_argument("StartNumber nao pode ser menor que 0 no modo Rename");
         }
         return std::make_unique<RenameMode>(folder, filter, prefix, startNumber);        
@@ -477,14 +502,17 @@ std::unique_ptr<Mode> CreateMode(const ArgumentParser& argParser)
             const bool bValidTo = (std::find(std::begin(extension), std::end(extension), to) != std::end(extension));
             if(!(bValidFrom) || !(bValidTo))
             {
+                utility::getLogError(Args::Flags::i_CONVERT, Args::Flags::i_FromToInvalidExtension);
                 throw std::invalid_argument("To e From tem de estar na lista de extension cadastradas : <png|jpg|jpeg>");    
             }
             if(from == to)
             {
+                utility::getLogError(Args::Flags::i_CONVERT, Args::Flags::i_FromAndToEqual);
                 throw std::invalid_argument("To e From nao podem ser iguais!\n.");    
             }
         }else
         {
+            utility::getLogError(Args::Flags::i_CONVERT, Args::Flags::i_EmptyFromTo);
             throw std::invalid_argument("To e From nao podem estar vazios no modo Convert");
         }
         return std::make_unique<ConvertMode>(folder, filter, from, to);

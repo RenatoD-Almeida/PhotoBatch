@@ -115,4 +115,3 @@ void ArgumentParser::Parser(int argc, char* argv[])
         }
     }
 }
-

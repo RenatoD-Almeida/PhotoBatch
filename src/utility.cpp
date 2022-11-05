@@ -1,4 +1,5 @@
 #include "utility.hpp"
+#include <fstream>
 
 namespace utility
 {
@@ -149,15 +150,107 @@ namespace utility
         }
         std::cout << "\nEnter para continuar: "; getchar();
     }
+
+    void getLogError(Args::Flags::flagsEnum FlagsEnum, Args::Flags::FlagsEnumError FlagsError)
+    {
+        std::ofstream fout;
+        fout.open("LogError.txt", std::ios::app);
+
+        switch(FlagsEnum)
+        {
+            case Args::Flags::i_RENAME:
+                fout << "Mode:------ FLAGS: RENAME\t";
+                break;
+            case Args::Flags::i_CONVERT:
+                fout << "Mode:------ FLAGS: CONVERT\t";
+                break;
+            case Args::Flags::i_RESIZE:
+                fout << "Mode:------ FLAGS: RESIZE\t";
+                break;
+            case Args::Flags::i_SCALE:
+                fout << "Mode:------ FLAGS: SCALE\t";
+                break;
+            case Args::Flags::i_NOARGS:
+                fout << "Mode:------ ";
+                break;                
+            default:
+                break;
+
+        }
+
+        switch(FlagsError)
+        {
+            //   -------- Option Folder
+            case Args::Flags::i_EmptyFolder:
+                fout << "OPTION\tERRO : < Folder > Vazio.\n\n";
+                break;
+            case Args::Flags::i_FolderNotExists:
+                fout << "OPTION\tERRO : < Folder > Nao existe.\n\n";
+                break;
+
+            //   -------- Option Filter
+            case Args::Flags::i_InvalidFilter:
+                fout << "OPTION\tERRO : Caracteres Invalidos no Argumento < Filter > Vazio.\n\n";
+                break;
+
+            //   -------- Flags 
+            case Args::Flags::i_NoFlags:
+                fout << "FLAGS\tERRO : Nenhuma Flag ativa.\n\n";
+                break;
+            case Args::Flags::i_FlagsALot:
+                fout << "FLAGS\tERRO : Mais de uma flag ativa.\n\n";
+                break;
+
+            //  -------- --------
+            //  -------- Rename
+            case Args::Flags::i_EmptyPrefix:
+                fout << "ERRO : < Prefixo > Vazio.\n\n";
+                break;
+            case Args::Flags::i_InvalidPrefix:
+                fout << "ERRO : Caracteres Invalidos no argumento < PREFIX >.\n\n";
+                break;
+            case Args::Flags::i_InvalidTypeStartNumber:
+                fout << "ERRO : Tipo invalido < StartNumber > \"not a number\" \n\n";
+                break;
+            case Args::Flags::i_StartNumberLessEqualZero:
+                fout << "ERRO : O argumento de < StartNumber > menor do que 0 \n\n";
+                break;    
+
+            //  -------- Convert
+            case Args::Flags::i_FromToInvalidExtension:
+                fout << "ERRO : Argumetos de < To > ou < From > nao estao cadastrados nas opcoes.\n\n";
+                break;
+            case Args::Flags::i_FromAndToEqual:
+                fout << "ERRO : Argumetos de < To > ou < From > sao Iguais.\n\n";
+                break;
+            case Args::Flags::i_EmptyFromTo:
+                fout << "ERRO : < To > ou < From > Vazios.\n\n";
+                break; 
+
+            //  -------- Resize
+            case Args::Flags::i_InvalidTypeWidthHeight:
+                fout << "ERRO : Tipo invalido <Width> ou <Height> \"not a number\"\n\n";
+                break;
+            case Args::Flags::i_WidthHeightLessThanZero:
+                fout << "ERRO : Argumetos de < Width > ou < Height > Menores ou iguais a 0.\n\n";
+                break;
+            case Args::Flags::i_ResizeNoFilter:
+                fout << "ERRO : Option < Filtro > esta vazio.\n\n";
+                break;
+            
+            //  -------- Scale
+            case Args::Flags::i_InvalidTypeAmount:
+                fout << "ERRO : Tipo Invalido < Amount > \"Not a number\"\n\n";
+                break;
+            case Args::Flags::i_AmountLessEqualZero:
+                fout << "ERRO : Argumetos de < Amount > Menor ou igual a 0.\n\n";
+                break;
+            case Args::Flags::i_ScaleNoFilter:
+                fout << "ERRO : Option < Filtro > esta vazio.\n\n";
+                break;
+        }
+
+
+        fout.close();
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
