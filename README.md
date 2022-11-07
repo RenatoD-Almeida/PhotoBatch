@@ -1,3 +1,11 @@
+# Before the Project
+
+## Contato do desenvolvedor:
+
+[GitHub](www.github.com/renatoD-Almeida)
+
+[Linked-In](https://www.linkedin.com/in/renatod-almeida/)
+
 # Project: _PhotoBatch_
 
 ## Descritivo:
