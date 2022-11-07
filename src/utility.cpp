@@ -1,6 +1,8 @@
 #include "utility.hpp"
 #include <fstream>
 
+#include<ctime>
+
 namespace utility
 {
 
@@ -153,8 +155,15 @@ namespace utility
 
     void getLogError(Args::Flags::flagsEnum FlagsEnum, Args::Flags::FlagsEnumError FlagsError)
     {
-        std::ofstream fout;
+        std::ofstream fout; char buffer[80];
         fout.open("LogError.txt", std::ios::app);
+
+        time_t tt; struct tm *infoTime;
+
+        time(&tt);
+        infoTime = localtime(&tt);
+        strftime(buffer, 80, "%c", infoTime);
+        fout << buffer << "----------------------" << "\n";
 
         switch(FlagsEnum)
         {
