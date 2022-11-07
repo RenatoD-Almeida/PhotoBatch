@@ -2,7 +2,7 @@
 
 ## Contato do desenvolvedor:
 
-[GitHub](www.github.com/renatoD-Almeida)
+![](https://www.clipartmax.com/middle/m2i8m2m2d3A0i8m2_github-logo-icon-github-logo-png/) [GitHub](www.github.com/renatoD-Almeida)
 
 [Linked-In](https://www.linkedin.com/in/renatod-almeida/)
 

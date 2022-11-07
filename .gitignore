@@ -54,5 +54,5 @@ _deps
 *-prefix/
 
 .vscode/
-builddir
+builddir/
 
