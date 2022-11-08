@@ -23,20 +23,30 @@ O projeto foi integrado com modulos descritivos, como a flag help, que utilizada
 ./app/photobatch --help
 ```
 
+![](https://raw.githubusercontent.com/RenatoD-Almeida/PhotoBatch/main/external/Assets/HelpAtAll.gif)
+
 ### Flag Help em conjunto, modulo ativo
 ```
 ./app/photobatch --scale --help
 ```
+
+![](https://raw.githubusercontent.com/RenatoD-Almeida/PhotoBatch/main/external/Assets/EspHelp.gif)
 
 ### Não realiza tarefas, apenas relatórios.
 
 ```
 ./app/PhotobatchpDev --rename --folder="/home/<username>/<workFolders> --Filter=".png" ...
 ```
+
+![](https://raw.githubusercontent.com/RenatoD-Almeida/PhotoBatch/main/external/Assets/RenameBatchpDev.gif)
+
 ### realiza tarefas, sem relatórios
 ```
 ./app/Photobatch --rename --folder="/home/<username>/<workFolders> --Filter=".png" ...
 ```
+
+![](https://raw.githubusercontent.com/RenatoD-Almeida/PhotoBatch/main/external/Assets/RenameBatch.gif)
+
 #
 
 ## Flags
