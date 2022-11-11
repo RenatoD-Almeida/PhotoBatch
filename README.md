@@ -1,9 +1,9 @@
-# Before the Project
+r# Before the Project
 
 ## Contato do desenvolvedor:
 
 [GitHub](www.github.com/renatoD-Almeida)
-
+r
 [Linked-In](https://www.linkedin.com/in/renatod-almeida/)
 
 # Project: _PhotoBatch_
@@ -40,7 +40,7 @@ O projeto foi integrado com modulos descritivos, como a flag help, que utilizada
 
 ![](https://raw.githubusercontent.com/RenatoD-Almeida/PhotoBatch/main/external/Assets/RenameBatchpDev.gif)
 
-### realiza tarefas, sem relatórios
+### Realiza tarefas, sem relatórios
 ```
 ./app/Photobatch --rename --folder="/home/<username>/<workFolders> --Filter=".png" ...
 ```
@@ -55,7 +55,7 @@ Há 4 (quatro) flags cadastradas no PhotoBatch e são elas:
 
 | Flags  | Descrição                            | Opções necessárias |
 |--------|--------------------------------------|--------------------| 
-|rename  |Renomeia Arquivos                     |Prefix e StartNumber| 
+|Rename  |Renomeia Arquivos                     |Prefix e StartNumber| 
 |Resize  |Redimensiona por medidas              |Width e Heigth      | 
 |Convert |Converte extensão de imagem PGN e JPG |From e To           |
 |Scale   |Redimensiona por escala               |Amount              |
