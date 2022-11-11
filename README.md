@@ -3,7 +3,7 @@ r# Before the Project
 ## Contato do desenvolvedor:
 
 [GitHub](www.github.com/renatoD-Almeida)
-r
+
 [Linked-In](https://www.linkedin.com/in/renatod-almeida/)
 
 # Project: _PhotoBatch_
