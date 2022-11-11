@@ -1,4 +1,4 @@
-r# Before the Project
+# Before the Project
 
 ## Contato do desenvolvedor:
 
